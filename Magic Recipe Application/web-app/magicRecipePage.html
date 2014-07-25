@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta http-equiv="Content-type" content="text/html; charset=us-ascii">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+
+	<title>MagicRecipe</title>
+	<link rel="alternate" type="application/rss+xml" title="RSS 2.0" href="http://www.datatables.net/rss.xml">
+	<link rel="stylesheet" type="text/css" href="a/media/css/site.css?_=c744abe10927d94aae2af713956c5676">
+	<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.1/css/jquery.dataTables.css">
+	<style type="text/css" class="init">
+
+	</style>
+
+	<script type="text/javascript" language="javascript" src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" language="javascript" src="//cdn.datatables.net/1.10.1/js/jquery.dataTables.min.js"></script>
+
+	<script type="text/javascript" class="init">
+
+
+$(document).ready(function() {
+	var t = $('#recipeTable').DataTable();
+	var counter = 1;
+
+	$('#btnSearchRecipies').on( 'click', function () {
+		try
+		{
+			//var urlPost="joke.txt";
+
+			var response = '';
+			var urlPost="http://webServerIp:port/MagicRecipe/magicRecipe/getRecipe?ingredients="+document.getElementById('txtIngredients').value+"&recipe="+document.getElementById('txtRecipe').value;
+
+	    		$.ajax({
+					url : urlPost,
+					success : function (data1) {
+
+	    		var myObject = JSON.parse(data1);
+	    		$('#recipeTable').dataTable().fnClearTable();
+
+				for (var i = 0; i < myObject.results.length; i++) {
+					var recipeItem = myObject.results[i];
+
+		    		var t = $('#recipeTable').DataTable();
+		    		var counter = 1;
+
+			        t.row.add( [
+			            recipeItem.title,
+			            "<a target='_blank' href="+recipeItem.href+">Check Recipe</a>",
+			            recipeItem.ingredients,
+			            "<img src="+recipeItem.thumbnail+"><img>"
+			        ] ).draw();
+
+			        counter++;
+			        }
+			       }
+				});
+		}
+		catch(err)
+	    {
+	    	alert(err);
+	    }
+	} );
+
+	// Automatically add a first row of data
+
+} );
+
+
+	</script>
+</head>
+
+<body  bgcolor="lightgrey">
+
+
+
+		<div class="fw-body">
+			<div class="content">
+				<h1>MAGIC RECIPES</h1>
+
+			<b>
+			Enter your combinations of ingredients and favourite dish <br/>
+			Ingredients in CSV<input type="text" name="txtIngredients" id="txtIngredients"/>
+			Recipe <input type="text" name="txtRecipe" id="txtRecipe"/>
+			<button id="btnSearchRecipies">Get recipies</button></b>
+
+
+				<table id="recipeTable" class="display" cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th>Recipe</th>
+							<th>Recipe Page</th>
+							<th>Ingredients</th>
+							<th>Picture</th>
+
+						</tr>
+					</thead>
+
+					<tfoot>
+						<tr>
+							<th>Recipe</th>
+							<th>Recipe Page</th>
+							<th>Ingredients</th>
+							<th>Picture</th>
+
+						</tr>
+					</tfoot>
+				</table>
+				</div>
+			</div>
+
+
+
+</body>
+</html>
